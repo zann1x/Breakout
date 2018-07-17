@@ -13,12 +13,20 @@ private:
 
 	sf::RectangleShape m_paddle;
 	const float m_paddleSizeX = 100.0f;
-	const float m_paddleSizeY = 30.0f;
+	const float m_paddleSizeY = 20.0f;
 	const float paddleVelocity = 400.0f;
+
+	sf::CircleShape m_ball;
+	const float m_ballRad = 15.0f;
+	float m_ballVelocityX = 300.0f;
+	float m_ballVelocityY = -500.0f;
+	bool m_ballIsAttached = true;
 
 	std::vector<sf::RectangleShape> m_recs;
 	const float m_recSizeX = 100.0f;
 	const float m_recSizeY = 30.0f;
+
+	bool m_gameIsPaused = false;
 
 private:
 	void pollEvents();
