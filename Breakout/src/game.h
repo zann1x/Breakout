@@ -18,6 +18,7 @@ private:
 
 	sf::CircleShape m_ball;
 	const float m_ballRad = 15.0f;
+	const float m_ballSize = 2 * m_ballRad;
 	float m_ballVelocityX = 300.0f;
 	float m_ballVelocityY = -500.0f;
 	bool m_ballIsAttached = true;
@@ -31,6 +32,7 @@ private:
 private:
 	void pollEvents();
 	void processInput(float delta);
+	bool checkCollission(sf::CircleShape& ball, sf::RectangleShape& obj);
 	void update(float delta);
 	void draw();
 
