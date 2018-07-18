@@ -78,8 +78,6 @@ void Game::processInput(float delta)
 
 bool Game::checkCollission(sf::CircleShape& ball, sf::RectangleShape& obj)
 {
-	sf::Vector2f ballPosTopRight = sf::Vector2f();
-
 	bool collisionX = ball.getPosition().x + m_ballSize >= obj.getPosition().x && ball.getPosition().x <= obj.getPosition().x + obj.getSize().x;
 	bool collisionY = ball.getPosition().y <= obj.getPosition().y + obj.getSize().y && ball.getPosition().y + m_ballSize >= obj.getPosition().y;
 
@@ -94,32 +92,33 @@ void Game::update(float delta)
 	}
 	else
 	{
+		m_ball.setPosition(m_ball.getPosition().x + m_ballVelocityX * delta, m_ball.getPosition().y + m_ballVelocityY * delta);
+
 		const sf::Vector2f ballPos = m_ball.getPosition();
-		m_ball.setPosition(ballPos.x + m_ballVelocityX * delta, ballPos.y + m_ballVelocityY * delta);
+		const sf::Vector2f ballPosTopRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y);
+		const sf::Vector2f ballPosBottomLeft = sf::Vector2f(ballPos.x, ballPos.y + m_ballSize);
+		const sf::Vector2f ballPosBottomRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y + m_ballSize);
 
 		// check window boundaries for ball
-		if (ballPos.x + m_ballVelocityX * delta + m_ballSize > m_windowWidth || ballPos.x + m_ballVelocityX * delta < 0.0f)
-			m_ballVelocityX = -m_ballVelocityX;
-		if (ballPos.y + m_ballVelocityY * delta < 0.0f)
-			m_ballVelocityY = -m_ballVelocityY;
-		if (ballPos.y + m_ballVelocityY * delta - m_ballSize > m_windowHeight)
+		if (ballPosTopRight.x >= m_windowWidth)
+			m_ballVelocityX = -1 * abs(m_ballVelocityX);
+		else if (ballPos.x <= 0.0f)
+			m_ballVelocityX = abs(m_ballVelocityX);
+		if (ballPos.y <= 0.0f)
+			m_ballVelocityY = abs(m_ballVelocityY);
+		else if (ballPos.y >= m_windowHeight)
 		{
 			m_ballIsAttached = true;
-			m_ballVelocityY = -m_ballVelocityY;
+			m_ballVelocityY = -1 * abs(m_ballVelocityY);
 		}
 
 		// check if ball has contact with player paddle
-		// bug noticed, but i think it is too cool to not leave it in the game as a feature
 		if (checkCollission(m_ball, m_paddle))
 		{
 			m_ballVelocityY = -1 * abs(m_ballVelocityY);
 		}
 
 		// check if ball hit a box
-		const sf::Vector2f ballPosTopRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y);
-		const sf::Vector2f ballPosBottomLeft = sf::Vector2f(ballPos.x, ballPos.y + m_ballSize);
-		const sf::Vector2f ballPosBottomRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y + m_ballSize);
-
 		bool hit = false;
 		for (int i = 0; i < m_recs.size(); )
 		{	
@@ -198,14 +197,15 @@ void Game::run()
 		{
 			update(delta);
 			draw();
-		}
-		frames++;
 
-		if ((clock.getElapsedTime() - timer).asSeconds() > 1.0f)
-		{
-			timer += sf::seconds(1.0f);
-			std::cout << frames << "fps" << std::endl;
-			frames = 0;
+			frames++;
+
+			if ((clock.getElapsedTime() - timer).asSeconds() > 1.0f)
+			{
+				timer += sf::seconds(1.0f);
+				std::cout << frames << "fps" << std::endl;
+				frames = 0;
+			}
 		}
 	}
 }
