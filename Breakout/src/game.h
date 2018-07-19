@@ -2,6 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
+enum class Direction
+{
+	TOP,
+	BOTTOM,
+	LEFT,
+	RIGHT
+};
+
 class Game
 {
 private:
@@ -32,7 +40,8 @@ private:
 private:
 	void pollEvents();
 	void processInput(float delta);
-	bool checkCollission(sf::CircleShape& ball, sf::RectangleShape& obj);
+	bool checkCollission(sf::RectangleShape& rec1, sf::RectangleShape& rec2);
+	std::tuple<bool, Direction, sf::Vector2f> checkCollision(sf::CircleShape& circle, sf::RectangleShape& rec);
 	void update(float delta);
 	void draw();
 
