@@ -5,11 +5,11 @@
 #include <algorithm>
 #include <tuple>
 
-sf::Vector2f dirVecs[] = {
-	sf::Vector2f(0, 1),
-	sf::Vector2f(0, -1),
-	sf::Vector2f(0, -1),
-	sf::Vector2f(1, 0)
+const sf::Vector2f dirVecs[] = {
+	sf::Vector2f( 0,  1),
+	sf::Vector2f( 0, -1),
+	sf::Vector2f(-1,  0),
+	sf::Vector2f( 1,  0)
 };
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
@@ -102,14 +102,13 @@ sf::Vector2f clamp(sf::Vector2f val, sf::Vector2f low, sf::Vector2f high)
 
 Direction getDirection(const sf::Vector2f& vec)
 {
-	const sf::Vector2f normalizedVec = vec / (vec.x * vec.x + vec.y * vec.y);
-
+	const sf::Vector2f normalizedVec = vec / sqrt(vec.x * vec.x + vec.y * vec.y);
 	int closest = -1;
 	float max = 0.0f;
 	for (int i = 0; i < 4; i++)
 	{
-		sf::Vector2f& dirVec = dirVecs[i];
-		float dot = normalizedVec.x * vec.x + normalizedVec.y * vec.y;
+		const sf::Vector2f& dirVec = dirVecs[i];
+		float dot = normalizedVec.x * dirVec.x + normalizedVec.y * dirVec.y;
 		if (dot > max)
 		{
 			max = dot;
@@ -171,20 +170,22 @@ void Game::update(float delta)
 		{
 			Direction dir = std::get<1>(coll);
 			const sf::Vector2f& diffVec = std::get<2>(coll);
-			if (dir == Direction::TOP || dir == Direction::BOTTOM)
+			if (dir == Direction::TOP)
 			{
 				m_ball.setPosition(ballPos.x, ballPos.y - abs(diffVec.y));
-				m_ballVelocityY = -m_ballVelocityY;
+				m_ballVelocityY = -1 * abs(m_ballVelocityY);
 			}
-			else
+			else if (dir == Direction::LEFT || dir == Direction::RIGHT)
 			{
-				m_ball.setPosition(ballPos.x, ballPos.y - abs(diffVec.x));
 				m_ballVelocityX = -m_ballVelocityX;
+				if (dir == Direction::LEFT)
+					m_ball.setPosition(ballPos.x - abs(diffVec.x), ballPos.y);
+				else
+					m_ball.setPosition(ballPos.x + abs(diffVec.x), ballPos.y);
 			}
 		}
 
 		// check if ball hit a box
-		bool hit = false;
 		for (int i = 0; i < m_recs.size(); )
 		{	
 			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball, m_recs.at(i));
@@ -197,26 +198,18 @@ void Game::update(float delta)
 					m_ballVelocityY = -m_ballVelocityY;
 					float correction = m_ball.getRadius() - abs(diffVec.y);
 					if (dir == Direction::TOP)
-					{
 						m_ball.setPosition(ballPos.x, ballPos.y - correction);
-					}
 					else
-					{
 						m_ball.setPosition(ballPos.x, ballPos.y + correction);
-					}
 				}
 				else
 				{
 					m_ballVelocityX = -m_ballVelocityX;
 					float correction = m_ball.getRadius() - abs(diffVec.x);
 					if (dir == Direction::LEFT)
-					{
-						m_ball.setPosition(ballPos.x + correction, ballPos.y);
-					}
-					else
-					{
 						m_ball.setPosition(ballPos.x - correction, ballPos.y);
-					}
+					else
+						m_ball.setPosition(ballPos.x + correction, ballPos.y);
 				}
 
 				m_recs.erase(m_recs.begin() + i);
