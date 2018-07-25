@@ -1,10 +1,9 @@
 #include "ball.h"
 
-Ball::Ball(sf::Vector2f velocity, float radius)
-	: m_velocity { velocity }, m_size{ radius * 2 }, m_radius{ radius }, m_isAttached{ true }
+Ball::Ball()
+	: m_shape{ 15.0f }, m_velocity{ sf::Vector2f(300.0f, -500.0f) }, m_isAttached{ true }
 {
-	m_shape.setRadius(m_radius);
-	m_shape.setFillColor(m_color);
+	m_shape.setFillColor(sf::Color::Magenta);
 }
 
 const sf::CircleShape& Ball::getShape() const
@@ -24,12 +23,12 @@ void Ball::setAttached(bool val)
 
 float Ball::getRadius() const
 {
-	return m_radius;
+	return m_shape.getRadius();
 }
 
 float Ball::getSize() const 
 { 
-	return m_size; 
+	return m_shape.getRadius() * 2;
 }
 
 const sf::Vector2f& Ball::getPosition() const

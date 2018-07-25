@@ -8,15 +8,11 @@ private:
 	sf::CircleShape m_shape;
 
 	sf::Vector2f m_velocity;
-	float m_size;
-
-	float m_radius;
-	sf::Color m_color = sf::Color(sf::Color::Magenta);
 
 	bool m_isAttached;
 
 public:
-	Ball(sf::Vector2f velocity, float radius);
+	Ball();
 
 	const sf::CircleShape& getShape() const;
 

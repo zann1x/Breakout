@@ -4,6 +4,7 @@
 
 #include "math.h"
 #include "ball.h"
+#include "paddle.h"
 
 class Game
 {
@@ -14,11 +15,7 @@ private:
 
 	sf::RenderWindow m_window;
 
-	sf::RectangleShape m_paddle;
-	const float m_paddleSizeX = 100.0f;
-	const float m_paddleSizeY = 20.0f;
-	const float paddleVelocity = 400.0f;
-
+	Paddle m_paddle;
 	Ball m_ball;
 
 	std::vector<sf::RectangleShape> m_recs;

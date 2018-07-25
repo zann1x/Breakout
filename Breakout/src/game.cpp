@@ -7,20 +7,9 @@
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
-		m_window { sf::VideoMode(width, height), title },
-		m_ball{ sf::Vector2f(300.0f, -500.0f), 15.0f }
+		m_window { sf::VideoMode(width, height), title }
 {
-	// player paddle
-	m_paddle.setSize(sf::Vector2f(m_paddleSizeX, m_paddleSizeY));
-	m_paddle.setFillColor(sf::Color::Green);
-	m_paddle.setPosition(m_windowWidth / 2 - m_paddleSizeX / 2, m_windowHeight - 10.0f - m_paddleSizeY);
-
-	/*
-	// ball
-	m_ball.setRadius(m_ballRad);
-	m_ball.setFillColor(sf::Color::Magenta);
-	m_ball.setPosition(400.0f, 400.0f);
-	*/
+	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
 
 	// colored boxes
 	std::default_random_engine gen;
@@ -59,16 +48,16 @@ void Game::processInput(float delta)
 	}
 	if (!m_gameIsPaused)
 	{
-		const sf::Vector2f paddlePos = m_paddle.getPosition();
+		const sf::Vector2f& paddlePos = m_paddle.getPosition();
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 		{
 			if (paddlePos.x > 10.0f)
-				m_paddle.setPosition(paddlePos.x - paddleVelocity * delta, paddlePos.y);
+				m_paddle.setPosition(paddlePos.x - m_paddle.getVelocity() * delta, paddlePos.y);
 		}
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 		{
 			if (paddlePos.x < 590.0f - m_paddle.getSize().x)
-				m_paddle.setPosition(paddlePos.x + paddleVelocity * delta, paddlePos.y);
+				m_paddle.setPosition(paddlePos.x + m_paddle.getVelocity() * delta, paddlePos.y);
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
@@ -111,7 +100,7 @@ void Game::update(float delta)
 {
 	if (m_ball.isAttached())
 	{
-		m_ball.setPosition(m_paddle.getPosition().x + m_paddleSizeX / 2 - m_ball.getRadius(), m_paddle.getPosition().y - m_ball.getSize());
+		m_ball.setPosition(m_paddle.getPosition().x + m_paddle.getSize().x / 2 - m_ball.getRadius(), m_paddle.getPosition().y - m_ball.getSize());
 	}
 	else
 	{
@@ -136,7 +125,7 @@ void Game::update(float delta)
 		}
 
 		// check if ball has contact with player paddle
-		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_paddle);
+		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_paddle.getShape());
 		if (std::get<0>(coll))
 		{
 			Direction dir = std::get<1>(coll);
@@ -200,7 +189,7 @@ void Game::draw()
 
 	for (sf::RectangleShape& rec : m_recs)
 		m_window.draw(rec);
-	m_window.draw(m_paddle);
+	m_window.draw(m_paddle.getShape());
 	m_window.draw(m_ball.getShape());
 
 	m_window.display();
