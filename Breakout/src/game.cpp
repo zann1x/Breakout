@@ -5,26 +5,22 @@
 #include <algorithm>
 #include <tuple>
 
-const sf::Vector2f dirVecs[] = {
-	sf::Vector2f( 0,  1),
-	sf::Vector2f( 0, -1),
-	sf::Vector2f(-1,  0),
-	sf::Vector2f( 1,  0)
-};
-
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
-		m_window { sf::VideoMode(width, height), title }
+		m_window { sf::VideoMode(width, height), title },
+		m_ball{ sf::Vector2f(300.0f, -500.0f), 15.0f }
 {
 	// player paddle
 	m_paddle.setSize(sf::Vector2f(m_paddleSizeX, m_paddleSizeY));
 	m_paddle.setFillColor(sf::Color::Green);
 	m_paddle.setPosition(m_windowWidth / 2 - m_paddleSizeX / 2, m_windowHeight - 10.0f - m_paddleSizeY);
 
+	/*
 	// ball
 	m_ball.setRadius(m_ballRad);
 	m_ball.setFillColor(sf::Color::Magenta);
 	m_ball.setPosition(400.0f, 400.0f);
+	*/
 
 	// colored boxes
 	std::default_random_engine gen;
@@ -56,10 +52,10 @@ void Game::processInput(float delta)
 {
 	pollEvents();
 
-	if (m_ballIsAttached)
+	if (m_ball.isAttached())
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-			m_ballIsAttached = false;
+			m_ball.setAttached(false);
 	}
 	if (!m_gameIsPaused)
 	{
@@ -85,40 +81,15 @@ void Game::processInput(float delta)
 	}
 }
 
-bool Game::checkCollission(sf::RectangleShape& rec1, sf::RectangleShape& rec2)
+bool Game::checkCollission(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2)
 {
-	bool collisionX = rec1.getPosition().x + m_ballSize >= rec2.getPosition().x && rec1.getPosition().x <= rec2.getPosition().x + rec2.getSize().x;
-	bool collisionY = rec1.getPosition().y <= rec2.getPosition().y + rec2.getSize().y && rec1.getPosition().y + m_ballSize >= rec2.getPosition().y;
+	bool collisionX = rec1.getPosition().x + m_ball.getSize() >= rec2.getPosition().x && rec1.getPosition().x <= rec2.getPosition().x + rec2.getSize().x;
+	bool collisionY = rec1.getPosition().y <= rec2.getPosition().y + rec2.getSize().y && rec1.getPosition().y + m_ball.getSize() >= rec2.getPosition().y;
 
 	return collisionX && collisionY;
 }
 
-sf::Vector2f clamp(sf::Vector2f val, sf::Vector2f low, sf::Vector2f high)
-{
-	float cx = std::max(low.x, std::min(high.x, val.x));
-	float cy = std::max(low.y, std::min(high.y, val.y));
-	return sf::Vector2f(cx, cy);
-}
-
-Direction getDirection(const sf::Vector2f& vec)
-{
-	const sf::Vector2f normalizedVec = vec / sqrt(vec.x * vec.x + vec.y * vec.y);
-	int closest = -1;
-	float max = 0.0f;
-	for (int i = 0; i < 4; i++)
-	{
-		const sf::Vector2f& dirVec = dirVecs[i];
-		float dot = normalizedVec.x * dirVec.x + normalizedVec.y * dirVec.y;
-		if (dot > max)
-		{
-			max = dot;
-			closest = i;
-		}
-	}
-	return static_cast<Direction>(closest);
-}
-
-std::tuple<bool, Direction, sf::Vector2f> Game::checkCollision(sf::CircleShape& circle, sf::RectangleShape& rec)
+std::tuple<bool, Direction, sf::Vector2f> Game::checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rec)
 {
 	const sf::Vector2f circleCenter = sf::Vector2f(circle.getPosition().x + circle.getRadius(), circle.getPosition().y + circle.getRadius());
 	const sf::Vector2f recHalfSize = sf::Vector2f(rec.getSize().x / 2, rec.getSize().y / 2);
@@ -138,34 +109,34 @@ std::tuple<bool, Direction, sf::Vector2f> Game::checkCollision(sf::CircleShape& 
 
 void Game::update(float delta)
 {
-	if (m_ballIsAttached)
+	if (m_ball.isAttached())
 	{
-		m_ball.setPosition(m_paddle.getPosition().x + m_paddleSizeX / 2 - m_ballRad, m_paddle.getPosition().y - m_ballSize);
+		m_ball.setPosition(m_paddle.getPosition().x + m_paddleSizeX / 2 - m_ball.getRadius(), m_paddle.getPosition().y - m_ball.getSize());
 	}
 	else
 	{
-		m_ball.setPosition(m_ball.getPosition().x + m_ballVelocityX * delta, m_ball.getPosition().y + m_ballVelocityY * delta);
+		m_ball.setPosition(m_ball.getPosition().x + m_ball.getVelocity().x * delta, m_ball.getPosition().y + m_ball.getVelocity().y * delta);
 
 		const sf::Vector2f ballPos = m_ball.getPosition();
-		const sf::Vector2f ballPosTopRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y);
-		const sf::Vector2f ballPosBottomLeft = sf::Vector2f(ballPos.x, ballPos.y + m_ballSize);
-		const sf::Vector2f ballPosBottomRight = sf::Vector2f(ballPos.x + m_ballSize, ballPos.y + m_ballSize);
+		const sf::Vector2f ballPosTopRight = sf::Vector2f(ballPos.x + m_ball.getSize(), ballPos.y);
+		const sf::Vector2f ballPosBottomLeft = sf::Vector2f(ballPos.x, ballPos.y + m_ball.getSize());
+		const sf::Vector2f ballPosBottomRight = sf::Vector2f(ballPos.x + m_ball.getSize(), ballPos.y + m_ball.getSize());
 
 		// check window boundaries for ball
 		if (ballPosTopRight.x >= m_windowWidth)
-			m_ballVelocityX = -1 * abs(m_ballVelocityX);
+			m_ball.setXVelocity(-1 * abs(m_ball.getVelocity().x));
 		else if (ballPos.x <= 0.0f)
-			m_ballVelocityX = abs(m_ballVelocityX);
+			m_ball.setXVelocity(abs(m_ball.getVelocity().x));
 		if (ballPos.y <= 0.0f)
-			m_ballVelocityY = abs(m_ballVelocityY);
-		else if (ballPos.y >= m_windowHeight)
+			m_ball.setYVelocity(abs(m_ball.getVelocity().y));
+		else if (ballPos.y > m_windowHeight + 25.0f)
 		{
-			m_ballIsAttached = true;
-			m_ballVelocityY = -1 * abs(m_ballVelocityY);
+			m_ball.setAttached(true);
+			m_ball.setYVelocity(-1 * abs(m_ball.getVelocity().y));
 		}
 
 		// check if ball has contact with player paddle
-		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball, m_paddle);
+		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_paddle);
 		if (std::get<0>(coll))
 		{
 			Direction dir = std::get<1>(coll);
@@ -173,11 +144,12 @@ void Game::update(float delta)
 			if (dir == Direction::TOP)
 			{
 				m_ball.setPosition(ballPos.x, ballPos.y - abs(diffVec.y));
-				m_ballVelocityY = -1 * abs(m_ballVelocityY);
+				m_ball.setYVelocity(-1 * abs(m_ball.getVelocity().y));
 			}
 			else if (dir == Direction::LEFT || dir == Direction::RIGHT)
 			{
-				m_ballVelocityX = -m_ballVelocityX;
+				m_ball.setXVelocity(-m_ball.getVelocity().x);
+
 				if (dir == Direction::LEFT)
 					m_ball.setPosition(ballPos.x - abs(diffVec.x), ballPos.y);
 				else
@@ -188,14 +160,14 @@ void Game::update(float delta)
 		// check if ball hit a box
 		for (int i = 0; i < m_recs.size(); )
 		{	
-			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball, m_recs.at(i));
+			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_recs.at(i));
 			if (std::get<0>(coll))
 			{
 				Direction dir = std::get<1>(coll);
 				const sf::Vector2f& diffVec = std::get<2>(coll);
 				if (dir == Direction::TOP || dir == Direction::BOTTOM)
 				{
-					m_ballVelocityY = -m_ballVelocityY;
+					m_ball.setYVelocity(-m_ball.getVelocity().y);
 					float correction = m_ball.getRadius() - abs(diffVec.y);
 					if (dir == Direction::TOP)
 						m_ball.setPosition(ballPos.x, ballPos.y - correction);
@@ -204,7 +176,7 @@ void Game::update(float delta)
 				}
 				else
 				{
-					m_ballVelocityX = -m_ballVelocityX;
+					m_ball.setXVelocity(-m_ball.getVelocity().x);
 					float correction = m_ball.getRadius() - abs(diffVec.x);
 					if (dir == Direction::LEFT)
 						m_ball.setPosition(ballPos.x - correction, ballPos.y);
@@ -229,7 +201,7 @@ void Game::draw()
 	for (sf::RectangleShape& rec : m_recs)
 		m_window.draw(rec);
 	m_window.draw(m_paddle);
-	m_window.draw(m_ball);
+	m_window.draw(m_ball.getShape());
 
 	m_window.display();
 }
