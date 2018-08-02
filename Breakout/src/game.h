@@ -5,6 +5,7 @@
 #include "math.h"
 #include "ball.h"
 #include "paddle.h"
+#include "game_object.h"
 
 class Game
 {
@@ -18,9 +19,7 @@ private:
 	Paddle m_paddle;
 	Ball m_ball;
 
-	std::vector<sf::RectangleShape> m_recs;
-	const float m_recSizeX = 100.0f;
-	const float m_recSizeY = 30.0f;
+	std::vector<GameObject> m_recs;
 
 	bool m_gameIsPaused = false;
 

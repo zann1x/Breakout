@@ -19,10 +19,9 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	{
 		for (int x = 0; x < 8; x++)
 		{
-			sf::RectangleShape rectangle(sf::Vector2f(m_recSizeX, m_recSizeY));
-			rectangle.setPosition(x * m_recSizeX, y * m_recSizeY);
-			rectangle.setFillColor(sf::Color(dis(gen), dis(gen), dis(gen), 255));
-			m_recs.push_back(rectangle);
+			GameObject rec;
+			rec.setPosition(x * rec.getSize().x, y * rec.getSize().y);
+			m_recs.push_back(rec);
 		}
 	}
 }
@@ -149,7 +148,7 @@ void Game::update(float delta)
 		// check if ball hit a box
 		for (int i = 0; i < m_recs.size(); )
 		{	
-			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_recs.at(i));
+			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_recs.at(i).getShape());
 			if (std::get<0>(coll))
 			{
 				Direction dir = std::get<1>(coll);
@@ -187,8 +186,8 @@ void Game::draw()
 {
 	m_window.clear();
 
-	for (sf::RectangleShape& rec : m_recs)
-		m_window.draw(rec);
+	for (GameObject& rec : m_recs)
+		m_window.draw(rec.getShape());
 	m_window.draw(m_paddle.getShape());
 	m_window.draw(m_ball.getShape());
 
