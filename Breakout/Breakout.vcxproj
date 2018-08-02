@@ -143,8 +143,13 @@
     <ClInclude Include="src\ball.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\game_object.h" />
+    <ClInclude Include="src\level_creator.h" />
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\paddle.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\maps\level_0.txt" />
+    <Text Include="res\maps\level_explanation.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

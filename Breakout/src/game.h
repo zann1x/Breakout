@@ -19,7 +19,7 @@ private:
 	Paddle m_paddle;
 	Ball m_ball;
 
-	std::vector<GameObject> m_recs;
+	std::vector<GameObject> m_objects;
 
 	bool m_gameIsPaused = false;
 

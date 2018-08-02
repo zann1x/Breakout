@@ -1,9 +1,9 @@
 #include "game.h"
 
 #include <iostream>
-#include <random>
-#include <algorithm>
 #include <tuple>
+
+#include "level_creator.h"
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
@@ -11,19 +11,7 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 {
 	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
 
-	// colored boxes
-	std::default_random_engine gen;
-	std::uniform_int_distribution<int> dis(0, 255);
-
-	for (int y = 0; y < 10; y++)
-	{
-		for (int x = 0; x < 8; x++)
-		{
-			GameObject rec;
-			rec.setPosition(x * rec.getSize().x, y * rec.getSize().y);
-			m_recs.push_back(rec);
-		}
-	}
+	m_objects = LevelCreator::create("res/maps/level_0.txt");
 }
 
 void Game::pollEvents()
@@ -146,9 +134,9 @@ void Game::update(float delta)
 		}
 
 		// check if ball hit a box
-		for (int i = 0; i < m_recs.size(); )
+		for (size_t i = 0; i < m_objects.size(); )
 		{	
-			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_recs.at(i).getShape());
+			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_objects.at(i).getShape());
 			if (std::get<0>(coll))
 			{
 				Direction dir = std::get<1>(coll);
@@ -172,7 +160,10 @@ void Game::update(float delta)
 						m_ball.setPosition(ballPos.x + correction, ballPos.y);
 				}
 
-				m_recs.erase(m_recs.begin() + i);
+				if (m_objects.at(i).isDestroyable())
+					m_objects.erase(m_objects.begin() + i);
+				else
+					i++;
 			}
 			else
 			{
@@ -186,7 +177,7 @@ void Game::draw()
 {
 	m_window.clear();
 
-	for (GameObject& rec : m_recs)
+	for (GameObject& rec : m_objects)
 		m_window.draw(rec.getShape());
 	m_window.draw(m_paddle.getShape());
 	m_window.draw(m_ball.getShape());
