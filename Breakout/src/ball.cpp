@@ -1,9 +1,10 @@
 #include "ball.h"
 
+#include "resource_manager.h"
+
 Ball::Ball()
 	: m_shape{ 15.0f }, m_velocity{ sf::Vector2f(300.0f, -500.0f) }, m_isAttached{ true }
 {
-	m_shape.setFillColor(sf::Color::Magenta);
 }
 
 const sf::CircleShape& Ball::getShape() const
@@ -54,4 +55,9 @@ void Ball::setXVelocity(float val)
 void Ball::setYVelocity(float val)
 {
 	m_velocity.y = val;
+}
+
+void Ball::setTexture(const sf::Texture& tex)
+{
+	m_shape.setTexture(&tex);
 }

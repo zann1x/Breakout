@@ -4,14 +4,29 @@
 #include <tuple>
 
 #include "level_creator.h"
+#include "resource_manager.h"
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
 		m_window { sf::VideoMode(width, height), title }
 {
+	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
+	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
+	ResourceManager::loadTexture("block_2", "res/img/block_2.png");
+	ResourceManager::loadTexture("paddle", "res/img/paddle.png");
+	ResourceManager::loadTexture("ball", "res/img/ball.png");
+
+	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
 	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
 
+	m_ball.setTexture(ResourceManager::getTexture("ball"));
+
 	m_objects = LevelCreator::create("res/maps/level_0.txt");
+}
+
+Game::~Game()
+{
+	ResourceManager::unloadTextures();
 }
 
 void Game::pollEvents()
@@ -48,12 +63,18 @@ void Game::processInput(float delta)
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+		{
 			m_gameIsPaused = true;
+			m_window.setTitle(m_title + " - paused");
+		}
 	}
 	else
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
+		{
 			m_gameIsPaused = false;
+			m_window.setTitle(m_title);
+		}
 	}
 }
 

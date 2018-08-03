@@ -4,9 +4,9 @@
 
 enum class BlockType
 {
-	SOLID,
-	RED,
-	GREEN
+	TYPE0,
+	TYPE1,
+	TYPE2
 };
 
 class GameObject

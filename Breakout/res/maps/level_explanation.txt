@@ -1,3 +1,0 @@
-0 - solid block
-1 - red block
-2 - green block

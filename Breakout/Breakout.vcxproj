@@ -138,6 +138,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\paddle.cpp" />
+    <ClCompile Include="src\resource_manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ball.h" />
@@ -146,10 +147,17 @@
     <ClInclude Include="src\level_creator.h" />
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\paddle.h" />
+    <ClInclude Include="src\resource_manager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\maps\level_0.txt" />
-    <Text Include="res\maps\level_explanation.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\img\ball.png" />
+    <Image Include="res\img\block_1.png" />
+    <Image Include="res\img\block_2.png" />
+    <Image Include="res\img\paddle.png" />
+    <Image Include="res\img\solid_block.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

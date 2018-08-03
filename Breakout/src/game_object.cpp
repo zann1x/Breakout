@@ -2,14 +2,14 @@
 
 #include <random>
 
+#include "resource_manager.h"
+
 std::default_random_engine gen;
 std::uniform_int_distribution<int> dis(0, 255);
 
 GameObject::GameObject()
 	: m_shape{ sf::Vector2f(100.0f, 30.0f) }
 {
-	m_shape.setOutlineColor(sf::Color::Black);
-	m_shape.setOutlineThickness(-1.0f);
 }
 
 const sf::RectangleShape& GameObject::getShape() const
@@ -31,17 +31,17 @@ void GameObject::setType(BlockType type)
 {
 	switch (type)
 	{
-	case BlockType::SOLID:
+	case BlockType::TYPE0:
 		m_isDestroyable = false;
-		m_shape.setFillColor(sf::Color(160.0f, 160.0f, 160.0f, 255.0f));
+		m_shape.setTexture(&ResourceManager::getTexture("solid_block"));
 		break;
-	case BlockType::RED:
+	case BlockType::TYPE1:
 		m_isDestroyable = true;
-		m_shape.setFillColor(sf::Color(255.0f, 0.0f, 0.0f, 255.0f));
+		m_shape.setTexture(&ResourceManager::getTexture("block_1"));
 		break;
-	case BlockType::GREEN:
+	case BlockType::TYPE2:
 		m_isDestroyable = true;
-		m_shape.setFillColor(sf::Color(0.0f, 255.0f, 0.0f, 255.0f));
+		m_shape.setTexture(&ResourceManager::getTexture("block_2"));
 		break;
 	}
 }

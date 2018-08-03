@@ -20,4 +20,6 @@ public:
 	void setPosition(float x, float y);
 
 	float getVelocity() const;
+
+	void setTexture(const sf::Texture& tex);
 };

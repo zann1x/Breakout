@@ -33,5 +33,7 @@ private:
 
 public:
 	Game(unsigned int width, unsigned int height, const sf::String& title);
+	~Game();
+
 	void run();
 };

@@ -28,4 +28,6 @@ public:
 	const sf::Vector2f& getVelocity() const;
 	void setXVelocity(float val);
 	void setYVelocity(float val);
+
+	void setTexture(const sf::Texture& tex);
 };

@@ -33,6 +33,9 @@
     <ClCompile Include="src\game_object.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\resource_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\game.h">
@@ -53,9 +56,28 @@
     <ClInclude Include="src\level_creator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\resource_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\maps\level_0.txt" />
-    <Text Include="res\maps\level_explanation.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\img\solid_block.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\img\block_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\img\block_1.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\img\paddle.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\img\ball.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

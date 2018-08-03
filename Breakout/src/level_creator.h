@@ -29,13 +29,13 @@ public:
 				switch (ch)
 				{
 				case '0':
-					rec.setType(BlockType::SOLID);
+					rec.setType(BlockType::TYPE0);
 					break;
 				case '1':
-					rec.setType(BlockType::RED);
+					rec.setType(BlockType::TYPE1);
 					break;
 				case '2':
-					rec.setType(BlockType::GREEN);
+					rec.setType(BlockType::TYPE2);
 					break;
 				default:
 					std::cout << "Block type unknown" << std::endl;

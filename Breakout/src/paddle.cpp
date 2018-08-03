@@ -1,9 +1,10 @@
 #include "paddle.h"
 
+#include "resource_manager.h"
+
 Paddle::Paddle()
 	: m_shape{ sf::Vector2f(100.0f, 20.0f) }, m_velocity{ 400.0f }
 {
-	m_shape.setFillColor(sf::Color::Green);
 }
 
 const sf::RectangleShape& Paddle::getShape() const
@@ -29,4 +30,9 @@ void Paddle::setPosition(float x, float y)
 float Paddle::getVelocity() const
 {
 	return m_velocity;
+}
+
+void Paddle::setTexture(const sf::Texture& tex)
+{
+	m_shape.setTexture(&tex);
 }
