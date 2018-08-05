@@ -19,7 +19,7 @@ private:
 public:
 	GameObject();
 
-	const sf::RectangleShape& getShape() const;
+	const sf::RectangleShape& getDrawable() const;
 
 	void setPosition(float x, float y);
 

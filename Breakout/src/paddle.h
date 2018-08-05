@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class Paddle
+#include "entity.h"
+
+class Paddle : public Entity
 {
 private:
 	sf::RectangleShape m_shape;
@@ -12,7 +14,7 @@ private:
 public:
 	Paddle();
 
-	const sf::RectangleShape& getShape() const;
+	const sf::RectangleShape& getDrawable() const override;
 
 	const sf::Vector2f& getSize() const;
 

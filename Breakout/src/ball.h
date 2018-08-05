@@ -2,7 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class Ball
+#include "entity.h"
+
+class Ball : public Entity
 {
 private:
 	sf::CircleShape m_shape;
@@ -14,7 +16,7 @@ private:
 public:
 	Ball();
 
-	const sf::CircleShape& getShape() const;
+	const sf::CircleShape& getDrawable() const override;
 
 	bool isAttached() const;
 	void setAttached(bool val);

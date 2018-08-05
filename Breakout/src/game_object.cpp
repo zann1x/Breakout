@@ -12,7 +12,7 @@ GameObject::GameObject()
 {
 }
 
-const sf::RectangleShape& GameObject::getShape() const
+const sf::RectangleShape& GameObject::getDrawable() const
 {
 	return m_shape;
 }

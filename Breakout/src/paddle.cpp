@@ -7,7 +7,7 @@ Paddle::Paddle()
 {
 }
 
-const sf::RectangleShape& Paddle::getShape() const
+const sf::RectangleShape& Paddle::getDrawable() const
 {
 	return m_shape;
 }

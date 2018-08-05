@@ -139,15 +139,18 @@
     <ClCompile Include="src\math.cpp" />
     <ClCompile Include="src\paddle.cpp" />
     <ClCompile Include="src\resource_manager.cpp" />
+    <ClCompile Include="src\text.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ball.h" />
+    <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\game.h" />
     <ClInclude Include="src\game_object.h" />
     <ClInclude Include="src\level_creator.h" />
     <ClInclude Include="src\math.h" />
     <ClInclude Include="src\paddle.h" />
     <ClInclude Include="src\resource_manager.h" />
+    <ClInclude Include="src\text.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="res\maps\level_0.txt" />
@@ -158,6 +161,9 @@
     <Image Include="res\img\block_2.png" />
     <Image Include="res\img\paddle.png" />
     <Image Include="res\img\solid_block.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="res\fonts\indie_flower.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

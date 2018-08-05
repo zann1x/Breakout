@@ -7,7 +7,7 @@ Ball::Ball()
 {
 }
 
-const sf::CircleShape& Ball::getShape() const
+const sf::CircleShape& Ball::getDrawable() const
 {
 	return m_shape;
 }

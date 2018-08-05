@@ -2,13 +2,15 @@
 
 #include <iostream>
 #include <tuple>
+#include <algorithm>
 
 #include "level_creator.h"
 #include "resource_manager.h"
+#include "text.h"
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
-		m_window { sf::VideoMode(width, height), title }
+		m_state{ GameState::START }, m_window { sf::VideoMode(width, height), title }
 {
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
@@ -16,17 +18,27 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	ResourceManager::loadTexture("paddle", "res/img/paddle.png");
 	ResourceManager::loadTexture("ball", "res/img/ball.png");
 
+	ResourceManager::loadText("start", "Press SPACE to start", "res/fonts/indie_flower.ttf");
+	ResourceManager::getText("start").center(sf::Vector2f(m_windowWidth, m_windowHeight));
+
+	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
+	ResourceManager::getText("continue").center(sf::Vector2f(m_windowWidth, m_windowHeight));
+
 	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
 	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
 
 	m_ball.setTexture(ResourceManager::getTexture("ball"));
 
 	m_objects = LevelCreator::create("res/maps/level_0.txt");
+
+	m_entities.push_back(&m_paddle);
+	m_entities.push_back(&m_ball);
+	m_entities.push_back(&ResourceManager::getText("start"));
 }
 
 Game::~Game()
 {
-	ResourceManager::unloadTextures();
+	ResourceManager::unloadResources();
 }
 
 void Game::pollEvents()
@@ -43,12 +55,20 @@ void Game::processInput(float delta)
 {
 	pollEvents();
 
-	if (m_ball.isAttached())
+	if (m_state == GameState::START || m_state == GameState::OVER)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
 			m_ball.setAttached(false);
+			m_state = GameState::PLAY;
+
+			std::vector<Entity*>::iterator it = std::find_if(m_entities.begin(), m_entities.end(), [&](Entity* e) { return &ResourceManager::getText("start") == e; });
+			if (it != m_entities.end())
+				m_entities.erase(it);
+		}
 	}
-	if (!m_gameIsPaused)
+	
+	if (m_state != GameState::PAUSE)
 	{
 		const sf::Vector2f& paddlePos = m_paddle.getPosition();
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
@@ -61,19 +81,28 @@ void Game::processInput(float delta)
 			if (paddlePos.x < 590.0f - m_paddle.getSize().x)
 				m_paddle.setPosition(paddlePos.x + m_paddle.getVelocity() * delta, paddlePos.y);
 		}
+	}
 
+	if (m_state == GameState::PLAY)
+	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 		{
-			m_gameIsPaused = true;
+			m_state = GameState::PAUSE;
 			m_window.setTitle(m_title + " - paused");
+			m_entities.push_back(&ResourceManager::getText("continue"));
 		}
 	}
-	else
+
+	if (m_state == GameState::PAUSE)
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return))
 		{
-			m_gameIsPaused = false;
+			m_state = GameState::PLAY;
 			m_window.setTitle(m_title);
+
+			std::vector<Entity*>::iterator it = std::find_if(m_entities.begin(), m_entities.end(), [&](Entity* m) { return &ResourceManager::getText("continue") == m; });
+			if (it != m_entities.end())
+				m_entities.erase(it);
 		}
 	}
 }
@@ -129,11 +158,12 @@ void Game::update(float delta)
 		else if (ballPos.y > m_windowHeight + 25.0f)
 		{
 			m_ball.setAttached(true);
+			m_state = GameState::OVER;
 			m_ball.setYVelocity(-1 * abs(m_ball.getVelocity().y));
 		}
 
 		// check if ball has contact with player paddle
-		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_paddle.getShape());
+		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_paddle.getDrawable());
 		if (std::get<0>(coll))
 		{
 			Direction dir = std::get<1>(coll);
@@ -157,7 +187,7 @@ void Game::update(float delta)
 		// check if ball hit a box
 		for (size_t i = 0; i < m_objects.size(); )
 		{	
-			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getShape(), m_objects.at(i).getShape());
+			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_objects.at(i).getDrawable());
 			if (std::get<0>(coll))
 			{
 				Direction dir = std::get<1>(coll);
@@ -199,9 +229,10 @@ void Game::draw()
 	m_window.clear();
 
 	for (GameObject& rec : m_objects)
-		m_window.draw(rec.getShape());
-	m_window.draw(m_paddle.getShape());
-	m_window.draw(m_ball.getShape());
+		m_window.draw(rec.getDrawable());
+
+	for (const Entity* entity : m_entities)
+		m_window.draw(entity->getDrawable());
 
 	m_window.display();
 }
@@ -222,19 +253,19 @@ void Game::run()
 		last = current;
 
 		processInput(delta);
-		if (!m_gameIsPaused)
+		if (m_state != GameState::PAUSE)
 		{
-			update(delta);
-			draw();
+			update(delta);	
+		}
+		draw();
 
-			frames++;
+		frames++;
 
-			if ((clock.getElapsedTime() - timer).asSeconds() > 1.0f)
-			{
-				timer += sf::seconds(1.0f);
-				std::cout << frames << "fps" << std::endl;
-				frames = 0;
-			}
+		if ((clock.getElapsedTime() - timer).asSeconds() > 1.0f)
+		{
+			timer += sf::seconds(1.0f);
+			std::cout << frames << "fps" << std::endl;
+			frames = 0;
 		}
 	}
 }
