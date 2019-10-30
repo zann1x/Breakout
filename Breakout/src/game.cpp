@@ -107,7 +107,7 @@ void Game::processInput(float delta)
 	}
 }
 
-bool Game::checkCollission(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2)
+bool Game::checkCollision(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2)
 {
 	bool collisionX = rec1.getPosition().x + m_ball.getSize() >= rec2.getPosition().x && rec1.getPosition().x <= rec2.getPosition().x + rec2.getSize().x;
 	bool collisionY = rec1.getPosition().y <= rec2.getPosition().y + rec2.getSize().y && rec1.getPosition().y + m_ball.getSize() >= rec2.getPosition().y;

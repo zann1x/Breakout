@@ -39,7 +39,7 @@ private:
 private:
 	void pollEvents();
 	void processInput(float delta);
-	bool checkCollission(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2);
+	bool checkCollision(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2);
 	std::tuple<bool, Direction, sf::Vector2f> checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rec);
 	void update(float delta);
 	void draw();
