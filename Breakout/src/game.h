@@ -41,6 +41,7 @@ private:
 	void processInput(float delta);
 	bool checkCollision(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2);
 	std::tuple<bool, Direction, sf::Vector2f> checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rec);
+	enum collisionInfoKey{ HasCollKey, DirKey, PosKey };
 	void update(float delta);
 	void draw();
 

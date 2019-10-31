@@ -164,10 +164,10 @@ void Game::update(float delta)
 
 		// check if ball has contact with player paddle
 		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_paddle.getDrawable());
-		if (std::get<0>(coll))
+		if (std::get<HasCollKey>(coll))
 		{
-			Direction dir = std::get<1>(coll);
-			const sf::Vector2f& diffVec = std::get<2>(coll);
+			Direction dir = std::get<DirKey>(coll);
+			const sf::Vector2f& diffVec = std::get<PosKey>(coll);
 			if (dir == Direction::TOP)
 			{
 				m_ball.setPosition(ballPos.x, ballPos.y - abs(diffVec.y));
@@ -188,10 +188,10 @@ void Game::update(float delta)
 		for (size_t i = 0; i < m_objects.size(); )
 		{	
 			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_objects.at(i).getDrawable());
-			if (std::get<0>(coll))
+			if (std::get<HasCollKey>(coll))
 			{
-				Direction dir = std::get<1>(coll);
-				const sf::Vector2f& diffVec = std::get<2>(coll);
+				Direction dir = std::get<DirKey>(coll);
+				const sf::Vector2f& diffVec = std::get<PosKey>(coll);
 				if (dir == Direction::TOP || dir == Direction::BOTTOM)
 				{
 					m_ball.setYVelocity(-m_ball.getVelocity().y);
