@@ -191,7 +191,7 @@ void Game::update(float delta)
 			if (std::get<collisionHappened>(coll))
 			{
 				Direction dir = std::get<collisionDirection>(coll);
-				const sf::Vector2f& diffVec = std::get<PosKey>(coll);
+				const sf::Vector2f& diffVec = std::get<collisionPosition>(coll);
 				if (dir == Direction::TOP || dir == Direction::BOTTOM)
 				{
 					m_ball.setYVelocity(-m_ball.getVelocity().y);
