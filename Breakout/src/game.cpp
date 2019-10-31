@@ -188,7 +188,7 @@ void Game::update(float delta)
 		for (size_t i = 0; i < m_objects.size(); )
 		{	
 			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_objects.at(i).getDrawable());
-			if (std::get<HasCollKey>(coll))
+			if (std::get<collisionHappened>(coll))
 			{
 				Direction dir = std::get<DirKey>(coll);
 				const sf::Vector2f& diffVec = std::get<PosKey>(coll);
