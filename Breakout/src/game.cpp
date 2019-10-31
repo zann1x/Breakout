@@ -190,7 +190,7 @@ void Game::update(float delta)
 			std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_objects.at(i).getDrawable());
 			if (std::get<collisionHappened>(coll))
 			{
-				Direction dir = std::get<DirKey>(coll);
+				Direction dir = std::get<collisionDirection>(coll);
 				const sf::Vector2f& diffVec = std::get<PosKey>(coll);
 				if (dir == Direction::TOP || dir == Direction::BOTTOM)
 				{
