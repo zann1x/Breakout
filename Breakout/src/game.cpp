@@ -164,7 +164,7 @@ void Game::update(float delta)
 
 		// check if ball has contact with player paddle
 		std::tuple<bool, Direction, sf::Vector2f> coll = checkCollision(m_ball.getDrawable(), m_paddle.getDrawable());
-		if (std::get<HasCollKey>(coll))
+		if (std::get<collisionHappened>(coll))
 		{
 			Direction dir = std::get<DirKey>(coll);
 			const sf::Vector2f& diffVec = std::get<PosKey>(coll);
