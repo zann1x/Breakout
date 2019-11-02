@@ -8,7 +8,7 @@ class GameClock
 {
 public:
 	/* Note: Clock starts at construction*/
-	explicit GameClock(float);
+	explicit GameClock(float fps = 60.f);
 
 	/* Starts clock at 0, run when you want to begin a new instance of the clock.*/
 	void initiateClock();
