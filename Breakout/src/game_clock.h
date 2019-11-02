@@ -22,7 +22,6 @@ public:
 	/* Get the current delta time of the clock*/
 	float elapsed() const;
 
-
 private:
 	/* returns true if clock has reached desired elapsed time */
 	bool readyToTick() const;
@@ -37,5 +36,4 @@ private:
 	float m_frametime;
 
 	std::vector<std::function<void(float)>> m_subscribedFunctions;
-
 };

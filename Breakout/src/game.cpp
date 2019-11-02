@@ -35,9 +35,7 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	m_entities.push_back(&m_ball);
 	m_entities.push_back(&ResourceManager::getText("start"));
 
-	
 	m_gameClock.subscribe(std::bind(&Game::update, this, std::placeholders::_1));
-
 }
 
 Game::~Game()

@@ -16,7 +16,6 @@ void GameClock::initiateClock()
 	m_clock = new sf::Clock{};
 }
 
-
 void GameClock::subscribe(std::function<void(float)> callbackSub)
 {
 	m_subscribedFunctions.push_back(callbackSub);
