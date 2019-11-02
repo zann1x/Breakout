@@ -13,7 +13,7 @@ public:
 	/* Starts clock at 0, run when you want to begin a new instance of the clock.*/
 	void initiateClock();
 
-	/* Subscribe update methods to clock to recieve a callback when clock ticks */
+	/* Subscribe update methods to clock to receive a callback when clock ticks */
 	void subscribe(std::function<void(float)>);
 
 	/* Update the current time of the clock */
