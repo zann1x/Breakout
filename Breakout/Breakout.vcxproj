@@ -134,6 +134,7 @@
   <ItemGroup>
     <ClCompile Include="src\ball.cpp" />
     <ClCompile Include="src\game.cpp" />
+    <ClCompile Include="src\game_clock.cpp" />
     <ClCompile Include="src\game_object.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="src\ball.h" />
     <ClInclude Include="src\entity.h" />
     <ClInclude Include="src\game.h" />
+    <ClInclude Include="src\game_clock.h" />
     <ClInclude Include="src\game_object.h" />
     <ClInclude Include="src\level_creator.h" />
     <ClInclude Include="src\math.h" />

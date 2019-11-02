@@ -8,6 +8,7 @@
 #include "paddle.h"
 #include "game_object.h"
 #include "text.h"
+#include "game_clock.h" 
 
 enum class GameState
 {
@@ -25,6 +26,7 @@ private:
 	unsigned int m_windowHeight;
 
 	GameState m_state;
+	GameClock m_gameClock;
 
 	sf::RenderWindow m_window;
 

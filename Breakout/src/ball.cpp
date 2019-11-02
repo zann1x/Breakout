@@ -3,7 +3,7 @@
 #include "resource_manager.h"
 
 Ball::Ball()
-	: m_shape{ 15.0f }, m_velocity{ sf::Vector2f(300.0f, -500.0f) }, m_isAttached{ true }
+	: m_shape{ 15.0f }, m_velocity{ sf::Vector2f(200.0f, -300.0f) }, m_isAttached{ true }
 {
 }
 
