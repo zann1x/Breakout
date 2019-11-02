@@ -1,6 +1,6 @@
 #include "game_clock.h"
 
-GameClock::GameClock(float fps = 60.f) : m_fps{ fps }
+GameClock::GameClock(float fps) : m_fps{ fps }
 {
 	m_frametime = 1.f / m_fps;
 	initiateClock();
