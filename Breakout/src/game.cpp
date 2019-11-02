@@ -10,7 +10,7 @@
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
-		m_state{ GameState::START }, m_window { sf::VideoMode(width, height), title }, m_gameClock{30.f}
+		m_state{ GameState::START }, m_window { sf::VideoMode(width, height), title }
 {
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
@@ -34,8 +34,6 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	m_entities.push_back(&m_paddle);
 	m_entities.push_back(&m_ball);
 	m_entities.push_back(&ResourceManager::getText("start"));
-
-	m_gameClock.subscribe(std::bind(&Game::update, this, std::placeholders::_1));
 }
 
 Game::~Game()
@@ -241,14 +239,21 @@ void Game::draw()
 
 void Game::run()
 {
-	m_gameClock.initiateClock();
+	GameClock clock{ 30.0f };
 
 	while (m_window.isOpen())
 	{
-		processInput(m_gameClock.elapsed());		
+		processInput(clock.elapsed());
+
 		if (m_state != GameState::PAUSE)
 		{
-			m_gameClock.update(); // gameclock.update() will call back all subscribed funcs when tick available
+			clock.update();
+
+			if (clock.readyToTick())
+			{
+				update(clock.elapsed());
+				clock.tick(); // currently calls subbed functions as well. pending removal
+			}
 		}
 		draw();
 	}

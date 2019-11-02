@@ -26,7 +26,6 @@ private:
 	unsigned int m_windowHeight;
 
 	GameState m_state;
-	GameClock m_gameClock;
 
 	sf::RenderWindow m_window;
 

@@ -8,26 +8,24 @@ class GameClock
 {
 public:
 	/* Note: Clock starts at construction*/
-	explicit GameClock(float fps = 60.f);
+	explicit GameClock( float fps = 60.f );
 
-	/* Starts clock at 0, run when you want to begin a new instance of the clock.*/
-	void initiateClock();
+	~GameClock() { delete m_clock; }
 
 	/* Subscribe update methods to clock to receive a callback when clock ticks */
-	void subscribe(std::function<void(float)> callbackSub);
+	void subscribe( std::function<void(float)> callbackSub );
 
 	/* Update the current time of the clock */
 	void update();
 
-	/* Get the current delta time of the clock*/
-	float elapsed() const;
-
-private:
 	/* returns true if clock has reached desired elapsed time */
 	bool readyToTick() const;
 
 	/* consumes elapsed time for one frame and calls all subscribed methods */
 	void tick();
+
+	/* Get the current delta time of the clock*/
+	float elapsed() const;
 
 private:
 	sf::Clock* m_clock;
