@@ -8,7 +8,6 @@
 #include "paddle.h"
 #include "game_object.h"
 #include "text.h"
-#include "game_clock.h" 
 
 enum class GameState
 {

@@ -4,12 +4,13 @@
 #include <tuple>
 #include <algorithm>
 
+#include "game_clock.h"
 #include "level_creator.h"
 #include "resource_manager.h"
 #include "text.h"
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
-	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, m_state{ GameState::START }, m_window { sf::VideoMode(width, height), title }
+	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, m_state{ GameState::START }, m_window{ sf::VideoMode(width, height), title }
 {
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");

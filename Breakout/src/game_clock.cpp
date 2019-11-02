@@ -1,20 +1,25 @@
 #include "game_clock.h"
 
-
-
-GameClock::GameClock( float fps ) : m_elapsed{ 0.f }, m_fps { fps }, m_clock{ new sf::Clock{} }
+GameClock::GameClock(float fps)
+	: m_elapsed{ 0.f }, m_fps{ fps }, m_clock{ new sf::Clock{} }
 {
 	m_frametime = 1.f / m_fps;
 }
 
-void GameClock::subscribe( std::function<void(float)> callbackSub )
+void GameClock::reset()
+{
+	m_elapsed = 0.f;
+	m_clock = new sf::Clock{};
+}
+
+void GameClock::subscribe(std::function<void(float)> callbackSub)
 {
 	m_subscribedFunctions.push_back(callbackSub);
 }
 
 void GameClock::update()
 {
-	m_elapsed += m_clock->restart().asSeconds();	
+	m_elapsed += m_clock->restart().asSeconds();
 }
 
 float GameClock::elapsed() const

@@ -8,12 +8,14 @@ class GameClock
 {
 public:
 	/* Note: Clock starts at construction*/
-	explicit GameClock( float fps = 60.f );
+	explicit GameClock(float fps = 60.f);
 
 	~GameClock() { delete m_clock; }
 
+	void reset();
+
 	/* Subscribe update methods to clock to receive a callback when clock ticks */
-	void subscribe( std::function<void(float)> callbackSub );
+	void subscribe(std::function<void(float)> callbackSub);
 
 	/* Update the current time of the clock */
 	void update();
