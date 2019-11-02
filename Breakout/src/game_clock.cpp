@@ -1,6 +1,8 @@
 #include "game_clock.h"
 
-GameClock::GameClock(float fps) : m_elapsed{ 0.f }, m_fps { fps }, m_clock{ new sf::Clock{} }
+
+
+GameClock::GameClock( float fps ) : m_elapsed{ 0.f }, m_fps { fps }, m_clock{ new sf::Clock{} }
 {
 	m_frametime = 1.f / m_fps;
 }
