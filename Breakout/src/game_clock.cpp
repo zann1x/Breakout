@@ -1,13 +1,14 @@
 #include "game_clock.h"
 
 GameClock::GameClock()
-	: m_clock{ new sf::Clock{} }, m_elapsed{ 0.f }, m_frames{ 0 }, m_frametime{ 0.f }
+	: m_clock{ new sf::Clock{} }, m_elapsed{ 0.f }, m_lastTick{ 0.0f }, m_frames{ 0 }, m_frametime{ 0.f }
 {
 }
 
 void GameClock::reset()
 {
 	m_elapsed = 0.f;
+	m_lastTick = 0.0f;
 	m_frames = 0;
 	m_frametime = 0.f;
 	delete m_clock;
@@ -24,5 +25,5 @@ void GameClock::update()
 void GameClock::tick()
 {
 	m_frames = 0;
-	m_elapsed = 0.0f;
+	m_lastTick = m_elapsed;
 }
