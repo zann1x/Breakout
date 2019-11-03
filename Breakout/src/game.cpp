@@ -12,6 +12,8 @@
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, m_state{ GameState::START }, m_window{ sf::VideoMode(width, height), title }
 {
+	m_window.setVerticalSyncEnabled(true);
+
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
 	ResourceManager::loadTexture("block_2", "res/img/block_2.png");
@@ -239,19 +241,20 @@ void Game::draw()
 
 void Game::run()
 {
-	GameClock clock{ 30.0f };
+	GameClock clock;
 
 	while (m_window.isOpen())
 	{
-		processInput(clock.elapsed());
+		clock.update();
+		processInput(clock.delta());
 
 		if (m_state != GameState::PAUSE)
 		{
-			clock.update();
+			update(clock.delta());
 
 			if (clock.readyToTick())
 			{
-				update(clock.elapsed());
+				std::cout << clock.getFps() << std::endl;
 				clock.tick();
 			}
 		}
