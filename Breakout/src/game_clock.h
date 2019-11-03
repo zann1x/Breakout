@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-#include <functional>
 #include <SFML/System/Clock.hpp>
 
 class GameClock
