@@ -18,11 +18,6 @@ void GameClock::update()
 	m_elapsed += m_clock->restart().asSeconds();
 }
 
-float GameClock::elapsed() const
-{
-	return m_elapsed;
-}
-
 void GameClock::tick()
 {
 	m_elapsed -= m_frametime;

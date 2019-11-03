@@ -24,13 +24,11 @@ public:
 	void tick();
 
 	/* Get the current delta time of the clock*/
-	float elapsed() const;
+	inline float elapsed() const { return m_elapsed; };
 
 private:
 	sf::Clock* m_clock;
 	float m_elapsed;
 	float m_fps;
 	float m_frametime;
-
-	std::vector<std::function<void(float)>> m_subscribedFunctions;
 };
