@@ -9,12 +9,8 @@ GameClock::GameClock(float fps)
 void GameClock::reset()
 {
 	m_elapsed = 0.f;
+	delete m_clock;
 	m_clock = new sf::Clock{};
-}
-
-void GameClock::subscribe(std::function<void(float)> callbackSub)
-{
-	m_subscribedFunctions.push_back(callbackSub);
 }
 
 void GameClock::update()
@@ -29,10 +25,6 @@ float GameClock::elapsed() const
 
 void GameClock::tick()
 {
-	for (auto sub : m_subscribedFunctions) // calls all subbed functions
-	{
-		sub(m_elapsed);
-	}
 	m_elapsed -= m_frametime;
 }
 

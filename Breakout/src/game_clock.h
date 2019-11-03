@@ -14,9 +14,6 @@ public:
 
 	void reset();
 
-	/* Subscribe update methods to clock to receive a callback when clock ticks */
-	void subscribe(std::function<void(float)> callbackSub);
-
 	/* Update the current time of the clock */
 	void update();
 

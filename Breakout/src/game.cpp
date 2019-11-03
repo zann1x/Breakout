@@ -252,7 +252,7 @@ void Game::run()
 			if (clock.readyToTick())
 			{
 				update(clock.elapsed());
-				clock.tick(); // currently calls subbed functions as well. pending removal
+				clock.tick();
 			}
 		}
 		draw();
