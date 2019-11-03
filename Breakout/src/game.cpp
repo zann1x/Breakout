@@ -19,10 +19,10 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	ResourceManager::loadTexture("ball", "res/img/ball.png");
 
 	ResourceManager::loadText("start", "Press SPACE to start", "res/fonts/indie_flower.ttf");
-	ResourceManager::getText("start").center(sf::Vector2f(m_windowWidth, m_windowHeight));
+	ResourceManager::getText("start").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
 
 	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
-	ResourceManager::getText("continue").center(sf::Vector2f(m_windowWidth, m_windowHeight));
+	ResourceManager::getText("continue").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
 
 	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
 	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
