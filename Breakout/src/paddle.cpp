@@ -3,7 +3,7 @@
 #include "resource_manager.h"
 
 Paddle::Paddle()
-	: m_shape{ sf::Vector2f(100.0f, 20.0f) }, m_velocity{ 400.0f }
+	: m_shape{ sf::Vector2f(100.0f, 20.0f) }, m_velocity{ 250.0f }
 {
 }
 

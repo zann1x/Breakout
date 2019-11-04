@@ -4,14 +4,16 @@
 #include <tuple>
 #include <algorithm>
 
+#include "game_clock.h"
 #include "level_creator.h"
 #include "resource_manager.h"
 #include "text.h"
 
 Game::Game(unsigned int width, unsigned int height, const sf::String& title)
-	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, 
-		m_state{ GameState::START }, m_window { sf::VideoMode(width, height), title }
+	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, m_state{ GameState::START }, m_window{ sf::VideoMode(width, height), title }
 {
+	m_window.setVerticalSyncEnabled(true);
+
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
 	ResourceManager::loadTexture("block_2", "res/img/block_2.png");
@@ -239,33 +241,23 @@ void Game::draw()
 
 void Game::run()
 {
-	sf::Clock clock;
-	sf::Time timer = clock.getElapsedTime();
-	sf::Time current = sf::Time::Zero;
-	sf::Time last = sf::Time::Zero;
-	float delta = 0.0f;
-	int frames = 0;
+	GameClock clock;
 
 	while (m_window.isOpen())
 	{
-		current = clock.getElapsedTime();
-		delta = (current - last).asSeconds();
-		last = current;
+		clock.update();
+		processInput(clock.delta());
 
-		processInput(delta);
 		if (m_state != GameState::PAUSE)
 		{
-			update(delta);	
+			update(clock.delta());
+
+			if (clock.readyToTick())
+			{
+				std::cout << clock.getFps() << std::endl;
+				clock.tick();
+			}
 		}
 		draw();
-
-		frames++;
-
-		if ((clock.getElapsedTime() - timer).asSeconds() > 1.0f)
-		{
-			timer += sf::seconds(1.0f);
-			std::cout << frames << "fps" << std::endl;
-			frames = 0;
-		}
 	}
 }
