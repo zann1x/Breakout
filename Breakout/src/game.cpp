@@ -13,24 +13,13 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 	: m_title{ title }, m_windowWidth{ width }, m_windowHeight{ height }, m_state{ GameState::START }, m_window{ sf::VideoMode(width, height), title }
 {
 	m_window.setVerticalSyncEnabled(true);
+		
 
-	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
-	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
-	ResourceManager::loadTexture("block_2", "res/img/block_2.png");
-	ResourceManager::loadTexture("paddle", "res/img/paddle.png");
-	ResourceManager::loadTexture("ball", "res/img/ball.png");
+	initTextures();
+	initText();
 
-	ResourceManager::loadText("start", "Press SPACE to start", "res/fonts/indie_flower.ttf");
-	ResourceManager::getText("start").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
-
-	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
-	ResourceManager::getText("continue").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
-
-	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
 	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
-
-	m_ball.setTexture(ResourceManager::getTexture("ball"));
-
+	
 	m_objects = LevelCreator::create("res/maps/level_0.txt");
 
 	m_entities.push_back(&m_paddle);
@@ -41,6 +30,27 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 Game::~Game()
 {
 	ResourceManager::unloadResources();
+}
+
+void Game::initTextures()
+{
+	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
+	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
+	ResourceManager::loadTexture("block_2", "res/img/block_2.png");
+	ResourceManager::loadTexture("paddle", "res/img/paddle.png");
+	ResourceManager::loadTexture("ball", "res/img/ball.png");
+
+	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
+	m_ball.setTexture(ResourceManager::getTexture("ball"));
+}
+
+void Game::initText()
+{
+	ResourceManager::loadText("start", "Press SPACE to start", "res/fonts/indie_flower.ttf");
+	ResourceManager::getText("start").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
+
+	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
+	ResourceManager::getText("continue").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
 }
 
 void Game::pollEvents()
