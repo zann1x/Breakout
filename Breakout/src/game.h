@@ -36,6 +36,9 @@ private:
 
 	bool m_gameIsPaused = false;
 
+	void initTextures();
+	void initText();
+
 private:
 	void pollEvents();
 	void processInput(float delta);
