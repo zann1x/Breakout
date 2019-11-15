@@ -14,17 +14,12 @@ Game::Game(unsigned int width, unsigned int height, const sf::String& title)
 {
 	m_window.setVerticalSyncEnabled(true);
 		
-
-	initTextures();
-	initText();
-
-	m_paddle.setPosition(width / 2 - m_paddle.getSize().x / 2, height - 10.0f - m_paddle.getSize().y);
-	
-	m_objects = LevelCreator::create("res/maps/level_0.txt");
-
+	initEntities();
 	m_entities.push_back(&m_paddle);
 	m_entities.push_back(&m_ball);
 	m_entities.push_back(&ResourceManager::getText("start"));
+
+	m_objects = LevelCreator::create("res/maps/level_0.txt");
 }
 
 Game::~Game()
@@ -32,7 +27,7 @@ Game::~Game()
 	ResourceManager::unloadResources();
 }
 
-void Game::initTextures()
+void Game::initEntities()
 {
 	ResourceManager::loadTexture("solid_block", "res/img/solid_block.png");
 	ResourceManager::loadTexture("block_1", "res/img/block_1.png");
@@ -42,15 +37,17 @@ void Game::initTextures()
 
 	m_paddle.setTexture(ResourceManager::getTexture("paddle"));
 	m_ball.setTexture(ResourceManager::getTexture("ball"));
-}
 
-void Game::initText()
-{
 	ResourceManager::loadText("start", "Press SPACE to start", "res/fonts/indie_flower.ttf");
 	ResourceManager::getText("start").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
 
 	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
 	ResourceManager::getText("continue").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
+
+	// changed the paddle y position to be a percentage of the screen height for potential window scaling
+	m_paddle.setPosition(m_windowWidth / 2 - m_paddle.getSize().x / 2, m_windowHeight * 0.95f - m_paddle.getSize().y);
+
+	
 }
 
 void Game::pollEvents()

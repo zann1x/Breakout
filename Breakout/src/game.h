@@ -36,8 +36,7 @@ private:
 
 	bool m_gameIsPaused = false;
 
-	void initTextures();
-	void initText();
+	void initEntities();
 
 private:
 	void pollEvents();
