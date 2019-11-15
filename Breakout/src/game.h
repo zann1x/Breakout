@@ -20,6 +20,14 @@ enum class GameState
 class Game
 {
 private:
+	enum CollisionInfo
+	{
+		collisionHappened,
+		collisionDirection,
+		collisionPosition
+	};
+
+private:
 	sf::String m_title;
 	unsigned int m_windowWidth;
 	unsigned int m_windowHeight;
@@ -39,9 +47,10 @@ private:
 private:
 	void pollEvents();
 	void processInput(float delta);
+	
 	bool checkCollision(const sf::RectangleShape& rec1, const sf::RectangleShape& rec2);
 	std::tuple<bool, Direction, sf::Vector2f> checkCollision(const sf::CircleShape& circle, const sf::RectangleShape& rec);
-	enum CollisionInfo { collisionHappened, collisionDirection, collisionPosition };
+
 	void update(float delta);
 	void draw();
 
