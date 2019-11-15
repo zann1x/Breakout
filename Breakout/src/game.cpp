@@ -44,10 +44,9 @@ void Game::initEntities()
 	ResourceManager::loadText("continue", "Press RETURN to continue", "res/fonts/indie_flower.ttf");
 	ResourceManager::getText("continue").center(sf::Vector2f((float)m_windowWidth, (float)m_windowHeight));
 
-	// changed the paddle y position to be a percentage of the screen height for potential window scaling
+	/* changed the paddle y position to be a percentage of the screen height for potential window scaling */
 	m_paddle.setPosition(m_windowWidth / 2 - m_paddle.getSize().x / 2, m_windowHeight * 0.95f - m_paddle.getSize().y);
-
-	
+		
 }
 
 void Game::pollEvents()
